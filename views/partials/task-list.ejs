@@ -1,0 +1,51 @@
+<!-- Task List Partial -->
+<div id="task-list" class="list-group list-group-flush">
+    <% if (tasks && tasks.length > 0) { %>
+        <% tasks.forEach(task => { %>
+            <%- include('../partials/task-item', { task }) %>
+        <% }); %>
+    <% } else if (filters && (filters.search || filters.priority || filters.status || filters.tags)) { %>
+        <!-- No tasks found with current filters -->
+        <div class="list-group-item text-center py-4">
+            <i class="bi bi-search text-muted fs-1"></i>
+            <p class="text-muted mb-2 mt-2">No tasks found matching your filters</p>
+            <button class="btn btn-sm btn-outline-primary" onclick="clearFilters()">
+                <i class="bi bi-x-circle me-1"></i>Clear Filters
+            </button>
+        </div>
+    <% } else { %>
+        <!-- No tasks at all -->
+        <div class="list-group-item text-center py-4">
+            <i class="bi bi-check-circle-fill text-success fs-1"></i>
+            <p class="text-muted mb-2 mt-2">No tasks yet. Create your first task to get started!</p>
+            <button class="btn btn-sm btn-primary" onclick="focusNewTaskForm()">
+                <i class="bi bi-plus me-1"></i>Add Your First Task
+            </button>
+        </div>
+    <% } %>
+</div>
+
+<script>
+function clearFilters() {
+    // Clear all filter inputs
+    document.getElementById('search').value = '';
+    document.getElementById('priority-filter').value = '';
+    document.getElementById('status-filter').value = '';
+    
+    // Reset sort options to defaults
+    document.getElementById('sort-by').value = 'createdAt';
+    document.getElementById('sort-order').value = 'desc';
+    
+    // Trigger filter change event
+    const event = new Event('input', { bubbles: true });
+    document.getElementById('search').dispatchEvent(event);
+}
+
+function focusNewTaskForm() {
+    const titleInput = document.getElementById('title');
+    if (titleInput) {
+        titleInput.focus();
+        titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>

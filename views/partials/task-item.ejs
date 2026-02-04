@@ -1,0 +1,161 @@
+<!-- Task Item Partial -->
+<div class="list-group-item task-item" data-task-id="<%= task.id %>">
+    <div class="d-flex align-items-center">
+        <!-- Task Completion Checkbox -->
+        <div class="form-check me-3">
+            <input 
+                class="form-check-input task-completed" 
+                type="checkbox" 
+                id="task-<%= task.id %>" 
+                <%= task.completed ? 'checked' : '' %>
+            >
+            <label class="form-check-label" for="task-<%= task.id %>"></label>
+        </div>
+
+        <!-- Task Content -->
+        <div class="flex-grow-1">
+            <!-- Display Mode -->
+            <div class="task-display">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="task-content">
+                        <h6 class="mb-1 task-title <%= task.completed ? 'text-decoration-line-through text-muted' : '' %>">
+                            <%= task.title %>
+                        </h6>
+                        
+                        <% if (task.description) { %>
+                        <p class="mb-1 text-muted task-description small">
+                            <%= task.description %>
+                        </p>
+                        <% } %>
+                        
+                        <div class="d-flex flex-wrap gap-1 align-items-center mt-2">
+                            <!-- Priority Badge -->
+                            <span class="badge priority-<%= task.priority %> task-priority">
+                                <%= task.priority %>
+                            </span>
+                            
+                            <!-- Due Date -->
+                            <% if (task.dueDate) { %>
+                                <% 
+                                const dueDate = new Date(task.dueDate);
+                                const today = new Date();
+                                const tomorrow = new Date(today);
+                                tomorrow.setDate(today.getDate() + 1);
+                                
+                                let dueDateClass = '';
+                                let dueDateText = dueDate.toLocaleDateString();
+                                
+                                if (dueDate < today) {
+                                    dueDateClass = 'due-date-overdue';
+                                    dueDateText = 'Overdue - ' + dueDateText;
+                                } else if (dueDate.toDateString() === today.toDateString()) {
+                                    dueDateClass = 'due-date-today';
+                                    dueDateText = 'Today';
+                                } else if (dueDate.toDateString() === tomorrow.toDateString()) {
+                                    dueDateClass = 'due-date-upcoming';
+                                    dueDateText = 'Tomorrow';
+                                }
+                                %>
+                                <small class="text-muted task-due-date <%= dueDateClass %>">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    <%= dueDateText %>
+                                </small>
+                            <% } %>
+                            
+                            <!-- Tags -->
+                            <% if (task.tags && task.tags.length > 0) { %>
+                                <div class="task-tags">
+                                    <% task.tags.forEach(tag => { %>
+                                        <span class="task-tag"><%= tag %></span>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                            
+                            <!-- Timestamps -->
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                Created <%= new Date(task.createdAt).toLocaleDateString() %>
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary btn-edit" title="Edit Task" aria-label="Edit Task">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-delete" title="Delete Task" aria-label="Delete Task">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Mode (Hidden by default) -->
+            <div class="inline-edit-form" style="display: none;">
+                <form class="task-edit-form">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm" 
+                                name="title" 
+                                value="<%= task.title %>" 
+                                required 
+                                maxlength="200"
+                                aria-label="Task title"
+                            >
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select form-select-sm" name="priority" aria-label="Priority">
+                                <option value="LOW" <%= task.priority === 'LOW' ? 'selected' : '' %>>Low</option>
+                                <option value="MEDIUM" <%= task.priority === 'MEDIUM' ? 'selected' : '' %>>Medium</option>
+                                <option value="HIGH" <%= task.priority === 'HIGH' ? 'selected' : '' %>>High</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input 
+                                type="date" 
+                                class="form-control form-control-sm" 
+                                name="dueDate" 
+                                value="<%= task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '' %>"
+                                aria-label="Due date"
+                            >
+                        </div>
+                        <div class="col-12">
+                            <textarea 
+                                class="form-control form-control-sm" 
+                                name="description" 
+                                rows="2" 
+                                maxlength="1000"
+                                placeholder="Task description..."
+                                aria-label="Task description"
+                            ><%= task.description || '' %></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm" 
+                                name="tags" 
+                                value="<%= task.tags ? task.tags.join(', ') : '' %>" 
+                                placeholder="Tags (comma separated)"
+                                aria-label="Tags"
+                            >
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group btn-group-sm w-100">
+                                <button type="button" class="btn btn-success btn-save-edit" title="Save Changes">
+                                    <i class="bi bi-check"></i> Save
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-cancel-edit" title="Cancel">
+                                    <i class="bi bi-x"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="version" value="<%= task.version %>">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  priority    String    @default("MEDIUM") // LOW, MEDIUM, HIGH
+  completed   Boolean   @default(false)
+  dueDate     DateTime?
+  tags        String?   // JSON array for MVP simplicity
+  
+  // Audit fields
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime? // Soft delete
+  version     Int       @default(1) // Optimistic concurrency
+  
+  @@index([deletedAt], name: "idx_task_deletedAt")
+  @@index([priority, dueDate], name: "idx_task_priority_dueDate")
+  @@index([createdAt], name: "idx_task_createdAt")
+  @@index([completed], name: "idx_task_completed")
+  @@map("tasks")
+}

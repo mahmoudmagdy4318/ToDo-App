@@ -1,0 +1,102 @@
+<!-- Pagination Partial -->
+<% if (pagination && pagination.pages > 1) { %>
+    <nav aria-label="Task pagination" class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <small class="text-muted">
+                Showing <%= ((pagination.page - 1) * pagination.limit) + 1 %>-<%= Math.min(pagination.page * pagination.limit, pagination.total) %> 
+                of <%= pagination.total %> tasks
+            </small>
+        </div>
+
+        <ul class="pagination pagination-sm mb-0">
+            <!-- Previous Button -->
+            <li class="page-item <%= !pagination.hasPrev ? 'disabled' : '' %>">
+                <a class="page-link" href="#" data-page="<%= pagination.page - 1 %>" 
+                   <%= !pagination.hasPrev ? 'tabindex="-1" aria-disabled="true"' : '' %>>
+                    <i class="bi bi-chevron-left"></i>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+            </li>
+
+            <!-- First page (if not on first page and there's a gap) -->
+            <% if (pagination.page > 3) { %>
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="1">1</a>
+                </li>
+                <% if (pagination.page > 4) { %>
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                <% } %>
+            <% } %>
+
+            <!-- Page numbers around current page -->
+            <%
+            const startPage = Math.max(1, pagination.page - 2);
+            const endPage = Math.min(pagination.pages, pagination.page + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+            %>
+                <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
+                    <a class="page-link" href="#" data-page="<%= i %>">
+                        <%= i %>
+                        <% if (i === pagination.page) { %>
+                            <span class="visually-hidden">(current)</span>
+                        <% } %>
+                    </a>
+                </li>
+            <% } %>
+
+            <!-- Last page (if not on last page and there's a gap) -->
+            <% if (pagination.page < pagination.pages - 2) { %>
+                <% if (pagination.page < pagination.pages - 3) { %>
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                <% } %>
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="<%= pagination.pages %>"><%= pagination.pages %></a>
+                </li>
+            <% } %>
+
+            <!-- Next Button -->
+            <li class="page-item <%= !pagination.hasNext ? 'disabled' : '' %>">
+                <a class="page-link" href="#" data-page="<%= pagination.page + 1 %>" 
+                   <%= !pagination.hasNext ? 'tabindex="-1" aria-disabled="true"' : '' %>>
+                    <span class="visually-hidden">Next</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Page Size Selector -->
+        <div class="d-flex align-items-center">
+            <label for="page-size" class="form-label me-2 mb-0 small">Per page:</label>
+            <select id="page-size" class="form-select form-select-sm" style="width: auto;">
+                <option value="10" <%= pagination.limit === 10 ? 'selected' : '' %>>10</option>
+                <option value="25" <%= pagination.limit === 25 ? 'selected' : '' %>>25</option>
+                <option value="50" <%= pagination.limit === 50 ? 'selected' : '' %>>50</option>
+                <option value="100" <%= pagination.limit === 100 ? 'selected' : '' %>>100</option>
+            </select>
+        </div>
+    </nav>
+<% } else if (pagination && pagination.total > 0) { %>
+    <!-- Show count when only one page -->
+    <div class="text-center py-2">
+        <small class="text-muted">
+            <%= pagination.total %> task<%= pagination.total !== 1 ? 's' : '' %> total
+        </small>
+    </div>
+<% } %>
+
+<script>
+// Handle page size changes
+document.getElementById('page-size')?.addEventListener('change', function(e) {
+    // Update URL parameters or trigger filter change
+    if (window.todoApp && window.todoApp.uiState) {
+        window.todoApp.uiState.updateFilter('limit', parseInt(e.target.value));
+        window.todoApp.uiState.updateFilter('page', 1); // Reset to first page
+        window.todoApp.taskManager.loadTasks();
+    }
+});
+</script>

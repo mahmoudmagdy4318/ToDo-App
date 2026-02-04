@@ -1,0 +1,91 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link " Todo App" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: 
+          - text: Todo App
+        - generic [ref=e8]:
+          - button " Export" [ref=e9] [cursor=pointer]:
+            - generic [ref=e10]: 
+            - text: Export
+          - button " Import" [ref=e11] [cursor=pointer]:
+            - generic [ref=e12]: 
+            - text: Import
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e16]:
+        - heading " Add New Task" [level=5] [ref=e18]:
+          - generic [ref=e19]: 
+          - text: Add New Task
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: Title *
+            - textbox "Title *" [ref=e25]: Alpha
+          - generic [ref=e26]:
+            - generic [ref=e27]: Priority
+            - combobox "Priority" [ref=e28]:
+              - option "Low"
+              - option "Medium" [selected]
+              - option "High"
+          - generic [ref=e29]:
+            - generic [ref=e30]: Due Date
+            - textbox "Due Date" [ref=e31]
+          - generic [ref=e32]:
+            - generic [ref=e33]: Description
+            - textbox "Description" [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]: Tags
+            - textbox "Tags" [ref=e37]:
+              - /placeholder: work, personal, urgent
+            - generic [ref=e38]: Separate tags with commas
+          - button " Add Task" [active] [ref=e40] [cursor=pointer]:
+            - generic [ref=e41]: 
+            - text: Add Task
+      - generic [ref=e43]:
+        - heading " Filters & Search" [level=6] [ref=e45]:
+          - generic [ref=e46]: 
+          - text: Filters & Search
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Search
+            - searchbox "Search" [ref=e52]
+          - generic [ref=e53]:
+            - generic [ref=e54]: Priority
+            - combobox "Priority" [ref=e55]:
+              - option "All" [selected]
+              - option "High"
+              - option "Medium"
+              - option "Low"
+          - generic [ref=e56]:
+            - generic [ref=e57]: Status
+            - combobox "Status" [ref=e58]:
+              - option "All" [selected]
+              - option "Incomplete"
+              - option "Completed"
+          - generic [ref=e59]:
+            - generic [ref=e60]: Sort By
+            - combobox "Sort By" [ref=e61]:
+              - option "Created" [selected]
+              - option "Due Date"
+              - option "Priority"
+              - option "Title"
+          - generic [ref=e62]:
+            - generic [ref=e63]: Order
+            - combobox "Order" [ref=e64]:
+              - option "Newest First" [selected]
+              - option "Oldest First"
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - heading " Tasks" [level=6] [ref=e68]:
+            - generic [ref=e69]: 
+            - text: Tasks
+          - generic [ref=e70]: 0 tasks
+        - generic [ref=e73]:
+          - generic [ref=e74]: 
+          - paragraph [ref=e75]: No tasks found. Add a new task to get started!
+```
