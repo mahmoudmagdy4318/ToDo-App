@@ -6,6 +6,45 @@ import { randomBytes } from 'crypto';
 export class TaskService {
   constructor(private taskRepository: TaskRepository) {}
 
+  async importTasksFromJson(payload: unknown): Promise<{ imported: number; errors: Array<{ index: number; message: string }> }> {
+    if (!Array.isArray(payload)) {
+      throw new ValidationError('Invalid import payload: expected an array');
+    }
+
+    const errors: Array<{ index: number; message: string }> = [];
+    let imported = 0;
+
+    for (let i = 0; i < payload.length; i++) {
+      const item = payload[i] as Partial<CreateTaskDto>;
+      try {
+        if (!item || typeof item !== 'object') throw new ValidationError('Invalid item');
+        if (!item.title || typeof item.title !== 'string') throw new ValidationError('Title is required');
+
+        const createDto: CreateTaskDto = {
+          title: item.title,
+          description: item.description ?? null,
+          priority: item.priority ?? Priority.MEDIUM,
+          completed: item.completed ?? false,
+          // normalize dueDate to midnight UTC if yyyy-mm-dd
+          dueDate: item.dueDate
+            ? typeof item.dueDate === 'string' && !item.dueDate.includes('T')
+              ? (item.dueDate + 'T00:00:00.000Z') as any
+              : (item.dueDate as any)
+            : undefined,
+          tags: item.tags ?? []
+        } as any;
+
+        const task = await this.createTask(createDto);
+        if (task) imported++;
+      } catch (e: any) {
+        const message = e?.message ?? 'Unknown error';
+        errors.push({ index: i, message });
+      }
+    }
+
+    return { imported, errors };
+  }
+
   async getTasks(filters: TaskFilters): Promise<PaginatedResult<Task>> {
     const [tasks, total] = await Promise.all([
       this.taskRepository.findMany(filters),
