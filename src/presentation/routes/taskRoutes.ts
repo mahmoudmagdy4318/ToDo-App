@@ -7,6 +7,7 @@ export function createTaskRoutes(taskController: TaskController): Router {
   // API Routes for tasks
   router.get('/tasks', (req, res) => taskController.getTasks(req, res));
   router.post('/tasks', (req, res) => taskController.createTask(req, res));
+  router.post('/tasks/import', (req, res) => taskController.importTasks(req, res));
   router.get('/tasks/deleted', (req, res) => taskController.getDeletedTasks(req, res));
   router.get('/tasks/:id', (req, res) => taskController.getTaskById(req, res));
   router.patch('/tasks/:id', (req, res) => taskController.updateTask(req, res));

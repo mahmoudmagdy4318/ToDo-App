@@ -7,6 +7,19 @@ import { ValidationError } from '../../domain/entities/Task.js';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
+  async importTasks(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.taskService.importTasksFromJson(req.body);
+      res.status(201).json(result);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+      throw error;
+    }
+  }
+
   async getTasks(req: Request, res: Response): Promise<void> {
     try {
       const filters = TaskFiltersSchema.parse(req.query);
