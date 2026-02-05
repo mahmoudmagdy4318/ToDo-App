@@ -1,3 +1,5 @@
+[GitHub Repository: https://github.com/mahmoudmagdy4318/ToDo-App]
+
 # Todo App MVP
 
 A full-stack todo application built with Node.js, Express, SQLite, Prisma ORM, EJS templates, and TypeScript. This project implements a layered architecture with proper separation of concerns, comprehensive error handling, and modern development practices.
